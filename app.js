@@ -3,7 +3,9 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const dbUrl = 'mongodb+srv://hydra:Code26102003@cluster0.d0dwiwa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+require('dotenv').config();
+
+const dbUrl = `mongodb+srv://hydra:${process.env.password}@cluster0.d0dwiwa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Router -- course
 const courseRoutes = require('./api/routes/course_router');
