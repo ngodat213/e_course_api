@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
-const checkAuth = require('../middleware/check-auth');
 
 // Functions
 const storage = multer.diskStorage({
@@ -33,6 +32,8 @@ const upload = multer({
 
 // Controller
 const ProductController = require('../controllers/course_controller');
+// Check authentication
+const checkAuth = require('../middleware/check-auth');
 
 // Router
 

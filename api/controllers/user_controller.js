@@ -23,7 +23,6 @@ exports.user_signup = (req, res, next) => {
                         _id: new mongoose.Types.ObjectId,
                         email: req.body.email,
                         password: hash,
-                        phoneNumber: req.body.phoneNumber,
                         username: req.body.username,
                         created: Date.now(),
                     });
@@ -46,48 +45,65 @@ exports.user_signup = (req, res, next) => {
         }
     });
 }
-
 exports.user_login = (req, res, next) => {
-    User.find({email: req.body.email})
-    .exec()
-    .then(user => {
-        if(user.length < 1){
-            return res.status(401).json({
-                message: 'Auth fail1'
-            });
-        }
-        bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-            if(err){
+    User.findOne({ email: req.body.email })
+        .exec()
+        .then(user => {
+            if (!user) {
                 return res.status(401).json({
-                    message: 'Auth fail1'
+                    message: 'Auth failed'
                 });
             }
-            if(result){
-                const token = jwt.sign({
-                        email: user[0].email,
-                        userId: user[0]._id,
-                    }, 
-                    process.env.JWT_KEY, 
-                    {
-                        expiresIn: "1h"
-                    }
-                );
-                return res.status(200).json({
-                    message: "Auth successfull!",
-                    token: token,
+            bcrypt.compare(req.body.password, user.password, (err, result) => {
+                if (err) {
+                    return res.status(401).json({
+                        message: 'Auth failed'
+                    });
+                }
+                if (result) {
+                    user.signedIn = Date.now(); // Update signedIn field
+                    user.save(); // Save the updated user
+                    const token = jwt.sign({
+                        email: user.email,
+                        userId: user._id,
+                    },
+                        process.env.JWT_KEY,
+                        {
+                            expiresIn: "1h"
+                        }
+                    );
+                    return res.status(200).json({
+                        message: "Auth successful!",
+                        token: token,
+                        user: {
+                            email: user.email,
+                            username: user.username,
+                            photoUrl: user.photoUrl,
+                            blogs: user.blogs,
+                            qAs: user.qAs,
+                            courses: user.courses,
+                            favouritesCourses: user.favouritesCourses,
+                            favouritesQuizs: user.favouritesQuizs,
+                            favouritesTeachers: user.favouritesTeachers,
+                            finishedQuizs: user.finishedQuizs,
+                            favouritesBlogs: user.favouritesBlogs,
+                            favouritesQAs: user.favouritesQAs,
+                            created: user.created,
+                            signedIn: user.signedIn // Return the updated signedIn value
+                        }
+                    });
+                }
+                return res.status(401).json({
+                    message: "Auth failed"
                 });
-            }
-            return res.status(401).json({
-                message: "Auth fail3"
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
             });
         });
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error: err
-        });
-    });
 }
 
 exports.user_delete = (req, res, next) => {

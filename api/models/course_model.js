@@ -2,16 +2,16 @@ const mongoose = require('mongoose');
 
 const courseSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    title: {type: String},
-    price: {type: Number, required: true},
+    teacherId: {type: String, required: true},
+    courseImage: {type: String, required: true},
+    title: {type: String, required: true},
+    description: {type: String, required: true},
+    time: {type: String, required: true},
     category: {type: String, required: true},
-    description: {type: String},
-    ratting: {type: String},
-    order: {type: Number},
-    teacherId: {type: String},
-    courseImage: {type: String},
-    time: {type: String},
-    lessons: [{ type: String}]
+    rating: {type: Number, required: true, default: 5},
+    register: {type: Number, default: 0},
+    lessons: [{ type: String}],
+    feedbacks: [{type: String}]
 });
 
 const Course = mongoose.model('Course', courseSchema);

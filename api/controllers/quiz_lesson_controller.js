@@ -16,7 +16,6 @@ exports.quizLesson_get_all = (req, res, next) => {
                     minute: quizLesson.minute,
                     second: quizLesson.second,
                     lesson: quizLesson.lesson,
-                    point: quizLesson.point,
                     questions: quizLesson.questions,
                     request: {
                         type: 'GET',
@@ -41,7 +40,6 @@ exports.quizLesson_create = (req, res, next) => {
         minute: req.body.minute,
         second: req.body.second,
         lesson: req.body.lesson,
-        point: req.body.point,
         questions: req.body.questions,
     });
     quizLesson.save()
@@ -56,7 +54,6 @@ exports.quizLesson_create = (req, res, next) => {
                 minute: result.minute,
                 second: result.second,
                 lesson: result.lesson,
-                point: result.point,
                 questions: result.questions,
                 request: {
                     type: 'GET',
@@ -137,7 +134,7 @@ exports.quizLesson_delete = (req, res, next) => {
                 request: {
                     type: "POST",
                     url: 'http://localhost:3000/quizLessons',
-                    body: { title: 'String', hour: 'Number', minute: 'Number', second: 'Number', lesson: 'String', point: 'Number', questions: 'Array' }
+                    body: { title: 'String', hour: 'Number', minute: 'Number', second: 'Number', lesson: 'String', questions: 'Array' }
                 }
             });
         })

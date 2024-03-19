@@ -3,6 +3,7 @@ const router = express.Router();
 
 // Controller
 const videoController = require('../controllers/course_video_controller');
+// Check authentication
 const checkAuth = require('../middleware/check-auth');
 
 // Router

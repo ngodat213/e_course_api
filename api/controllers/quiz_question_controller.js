@@ -4,29 +4,30 @@ const QuizQuestion = require('../models/quiz_question_model');
 // Controller
 exports.quizQuestion_get_all = (req, res, next) => {
     QuizQuestion.find()
-    .exec()
-    .then(quizQuestions => {
-        res.status(200).json({
-            count: quizQuestions.length,
-            quizQuestions: quizQuestions.map(quizQuestion => {
-                return {
-                    _id: quizQuestion._id,
-                    question: quizQuestion.question,
-                    answer: quizQuestion.answer,
-                    options: quizQuestion.options,
-                    request: {
-                        type: 'GET',
-                        url: 'http://localhost:3000/quizQuestions/' + quizQuestion._id
+        .exec()
+        .then(quizQuestions => {
+            res.status(200).json({
+                count: quizQuestions.length,
+                quizQuestions: quizQuestions.map(quizQuestion => {
+                    return {
+                        _id: quizQuestion._id,
+                        question: quizQuestion.question,
+                        answer: quizQuestion.answer,
+                        options: quizQuestion.options,
+                        imageUrl: quizQuestion.imageUrl, // Include imageUrl here
+                        request: {
+                            type: 'GET',
+                            url: 'http://localhost:3000/quizQuestions/' + quizQuestion._id
+                        }
                     }
-                }
+                })
             })
-        })
-    }).catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error: err
+        }).catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
         });
-    });
 }
 
 exports.quizQuestion_create = (req, res, next) => {
@@ -35,30 +36,32 @@ exports.quizQuestion_create = (req, res, next) => {
         question: req.body.question,
         answer: req.body.answer,
         options: req.body.options,
+        imageUrl: req.body.imageUrl // Include imageUrl here
     });
     quizQuestion.save()
-    .then(result => {
-        console.log(result);
-        res.status(201).json({
-            message: "Quiz question created successfully",
-            createdQuizQuestion: {
-                _id: result._id,
-                question: result.question,
-                answer: result.answer,
-                options: result.options,
-                request: {
-                    type: 'GET',
-                    url: 'http://localhost:3000/quizQuestions/' + result._id
+        .then(result => {
+            console.log(result);
+            res.status(201).json({
+                message: "Quiz question created successfully",
+                createdQuizQuestion: {
+                    _id: result._id,
+                    question: result.question,
+                    answer: result.answer,
+                    options: result.options,
+                    imageUrl: result.imageUrl, // Include imageUrl here
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3000/quizQuestions/' + result._id
+                    }
                 }
-            }
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
         });
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error: err
-        });
-    });
 }
 
 exports.quizQuestion_get_by_id = (req, res, next) => {

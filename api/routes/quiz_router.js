@@ -3,6 +3,7 @@ const router = express.Router();
 
 // Controller
 const quizController = require('../controllers/quiz_controller');
+// Check authentication
 const checkAuth = require('../middleware/check-auth');
 
 // Router

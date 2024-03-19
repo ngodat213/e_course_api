@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const CourseComment = require('../models/courseCommentModel');
+const Comment = require('../models/comment_model');
 
-exports.courseComment_get_all = (req, res, next) => {
-    CourseComment.find()
+exports.comment_get_all = (req, res, next) => {
+    Comment.find()
         .exec()
         .then(comments => {
             res.status(200).json({
@@ -13,6 +13,7 @@ exports.courseComment_get_all = (req, res, next) => {
                         title: comment.title,
                         like: comment.like,
                         userId: comment.userId,
+                        feedbacks: comment.feedbacks,
                         request: {
                             type: 'GET',
                             url: 'http://localhost:3000/comments/' + comment._id
@@ -29,12 +30,13 @@ exports.courseComment_get_all = (req, res, next) => {
         });
 };
 
-exports.courseCommment_create = (req, res, next) => {
-    const comment = new CourseComment({
+exports.commment_create = (req, res, next) => {
+    const comment = new Comment({
         _id: new mongoose.Types.ObjectId(),
         title: req.body.title,
         like: req.body.like,
-        userId: req.body.userId // Assuming userId is provided as an array of user IDs
+        userId: req.body.userId,
+        feedbacks: req.body.feedbacks,
     });
 
     comment.save()
@@ -47,6 +49,7 @@ exports.courseCommment_create = (req, res, next) => {
                     title: result.title,
                     like: result.like,
                     userId: result.userId,
+                    feedbacks: result.feedbacks,
                     request: {
                         type: 'GET',
                         url: 'http://localhost:3000/comments/' + result._id
@@ -62,9 +65,9 @@ exports.courseCommment_create = (req, res, next) => {
         });
 };
 
-exports.courseComment_get_by_id = (req, res, next) => {
+exports.comment_get_by_id = (req, res, next) => {
     const id = req.params.commentId;
-    CourseComment.findById(id)
+    Comment.findById(id)
         .exec()
         .then(comment => {
             if (comment) {
@@ -87,7 +90,7 @@ exports.courseComment_get_by_id = (req, res, next) => {
         });
 };
 
-exports.courseComment_update = (req, res, next) => {
+exports.comment_update = (req, res, next) => {
     const id = req.params.commentId;
     const updateOps = {};
     
@@ -95,7 +98,7 @@ exports.courseComment_update = (req, res, next) => {
         updateOps[ops.propName] = ops.value;
     }
     
-    CourseComment.updateOne({ _id: id }, { $set: updateOps })
+    Comment.updateOne({ _id: id }, { $set: updateOps })
         .exec()
         .then(result => {
             console.log(result);
@@ -115,9 +118,9 @@ exports.courseComment_update = (req, res, next) => {
         });
 };
 
-exports.courseComment_delete = (req, res, next) => {
+exports.comment_delete = (req, res, next) => {
     const id = req.params.commentId;
-    CourseComment.deleteOne({ _id: id })
+    Comment.deleteOne({ _id: id })
         .exec()
         .then(result => {
             console.log(result);
@@ -126,7 +129,7 @@ exports.courseComment_delete = (req, res, next) => {
                 request: {
                     type: "POST",
                     url: 'http://localhost:3000/comments',
-                    body: { title: 'String', like: 'Number', userId: ['Array of User IDs'] }
+                    body: { title: 'String', like: 'Number', userId: ['Array of User IDs'] ,feedbacks: ['Array of Comment IDs']}
                 }
             });
         })

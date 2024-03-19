@@ -4,23 +4,24 @@ const Lesson = require('../models/course_lesson_model');
 
 exports.course_get_all = (req, res, next) => {
     Course.find()
-        .select('title price category description rating teacher order courseImage lessons')
+        .select('title category description rating teacher order courseImage lessons feedbacks')
         .exec()
         .then(docs => {
             const response = {
                 count: docs.length,
                 courses: docs.map(doc => {
                     return {
-                        _id: doc._id,
-                        title: doc.title,
-                        price: doc.price,
-                        category: doc.category,
-                        description: doc.description,
-                        rating: doc.rating,
-                        teacher: doc.teacher,
-                        order: doc.order,
-                        courseImage: doc.courseImage,
-                        lessons: doc.lessons, // Include lessons associated with the course
+                        _id: course._id,
+                        teacherId: course.teacherId,
+                        courseImage: course.courseImage,
+                        title: course.title,
+                        description: course.description,
+                        time: course.time,
+                        category: course.category,
+                        rating: course.rating,
+                        register: course.register,
+                        lessons: course.lessons,
+                        feedbacks: course.feedbacks,
                         request: {
                             type: 'GET',
                             url: 'http://localhost:3000/course/' + doc._id,
@@ -41,15 +42,16 @@ exports.course_get_all = (req, res, next) => {
 exports.course_create = (req, res, next) => {
     const course = new Course({
         _id: new mongoose.Types.ObjectId(),
-        title: req.body.title,
-        price: req.body.price,
-        category: req.body.category,
-        description: req.body.description,
-        rating: req.body.rating,
         teacherId: req.body.teacherId,
         courseImage: req.body.courseImage,
+        title: req.body.title,
+        description: req.body.description,
         time: req.body.time,
+        category: req.body.category,
+        rating: req.body.rating,
+        register: req.body.register,
         lessons: req.body.lessons,
+        feedbacks: req.body.feedbacks
     });
 
     course.save()
@@ -59,14 +61,16 @@ exports.course_create = (req, res, next) => {
                 message: "Course created successfully",
                 createdCourse: {
                     _id: result._id,
-                    title: result.title,
-                    price: result.price,
-                    category: result.category,
-                    description: result.description,
-                    rating: result.rating,
                     teacherId: result.teacherId,
                     courseImage: result.courseImage,
+                    title: result.title,
+                    description: result.description,
                     time: result.time,
+                    category: result.category,
+                    rating: result.rating,
+                    register: result.register,
+                    lessons: result.lessons,
+                    feedbacks: result.feedbacks,
                     request: {
                         type: 'GET',
                         url: 'http://localhost:3000/course/' + result._id,
@@ -85,8 +89,7 @@ exports.course_create = (req, res, next) => {
 exports.course_get = (req, res, next) => {
     const id = req.params.courseId;
     Course.findById(id)
-    .select('_id title price category description rating teacher order courseImage')
-    .populate('lessons', '_id title lesson') 
+    .select('_id teacherId time register title category description rating teacher order courseImage lessons feedbacks')
     .exec()
     .then(doc => {
         console.log("From database", doc);
@@ -143,9 +146,20 @@ exports.course_delete = (req, res, next) => {
         res.status(200).json({
             message: "Corse deleted",
             request: {
-                type: "GET",
-                url: 'http://localhost:3000/course/' + id,
-                body: {name: 'String', price: "Number"}
+                type: "POST",
+                url: 'http://localhost:3000/courses',
+                body: {
+                    teacherId: 'String',
+                    courseImage: 'String',
+                    title: 'String',
+                    description: 'String',
+                    time: 'String',
+                    category: 'String',
+                    ratting: 'String',
+                    register: 'Number',
+                    lessons: ['Array of Strings'],
+                    feedbacks: ['Array of Strings']
+                }
             }
         });
     })

@@ -3,11 +3,9 @@ const Contact = require('../models/contact_model');
 
 // Controller
 exports.contact_create = (req, res, next) => {
-    const { fullName, mail, text, topic } = req.body;
+    const { text, topic } = req.body;
     const contact = new Contact({
         _id: new mongoose.Types.ObjectId(),
-        fullName,
-        mail,
         text,
         topic
     });
@@ -18,8 +16,6 @@ exports.contact_create = (req, res, next) => {
             message: "Contact created successfully",
             createdContact: {
                 _id: result._id,
-                fullName: result.fullName,
-                mail: result.mail,
                 text: result.text,
                 topic: result.topic,
                 request: {
@@ -48,8 +44,6 @@ exports.contact_get_all = (req, res, next) => {
                     _id: contact._id,
                     fullName: contact.fullName,
                     mail: contact.mail,
-                    text: contact.text,
-                    topic: contact.topic,
                     request: {
                         type: 'GET',
                         url: 'http://localhost:3000/contact/' + contact._id
@@ -129,7 +123,7 @@ exports.contact_delete = (req, res, next) => {
                 request: {
                     type: "POST",
                     url: 'http://localhost:3000/contact',
-                    body: { fullName: 'String', mail: 'String', text: 'String', topic: 'String' }
+                    body: {text: 'String', topic: 'String' }
                 }
             });
         })

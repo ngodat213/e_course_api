@@ -18,6 +18,10 @@ const quizQuestionRoutes = require('./api/routes/quiz_question_router');
 // Router -- user
 const userRoutes = require('./api/routes/user_router');
 const contactRoutes = require('./api/routes/contact_router');
+const commentRouter = require('./api/routes/comment_router');
+const teacherRouter = require('./api/routes/teacher_router');
+// Router -- blog
+const blogRouter = require('./api/routes/blog_router');
 
 mongoose.connect(dbUrl);
 
@@ -49,6 +53,10 @@ app.use('/quizQuestion', quizQuestionRoutes);
 // ----------- user ---------------- 
 app.use('/contact', contactRoutes);
 app.use('/user', userRoutes);
+app.use('/comment', commentRouter);
+app.use('/teacher', teacherRouter),
+// ------------blog-----------------
+app.use('/blog', blogRouter);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');

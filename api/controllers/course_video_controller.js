@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const CourseVideo = require('../models/course_video_model');
-const CourseComment = require('../models/course_comment_model');
 
 // Controller to get all course videos
 exports.courseVideo_get_all = (req, res, next) => {
@@ -13,7 +12,6 @@ exports.courseVideo_get_all = (req, res, next) => {
                     return {
                         _id: video._id,
                         title: video.title,
-                        selection: video.selection,
                         hour: video.hour,
                         minute: video.minute,
                         part: video.part,
@@ -41,13 +39,12 @@ exports.courseVideo_create = (req, res, next) => {
     const video = new CourseVideo({
         _id: new mongoose.Types.ObjectId(),
         title: req.body.title,
-        selection: req.body.selection,
         hour: req.body.hour,
         minute: req.body.minute,
         part: req.body.part,
         videoUrl: req.body.videoUrl,
         description: req.body.description,
-        comments: req.body.comments // Assuming comments are provided as an array of comment IDs
+        comments: req.body.comments
     });
 
     video.save()
@@ -58,7 +55,6 @@ exports.courseVideo_create = (req, res, next) => {
                 createdVideo: {
                     _id: result._id,
                     title: result.title,
-                    selection: result.selection,
                     hour: result.hour,
                     minute: result.minute,
                     part: result.part,
@@ -91,7 +87,6 @@ exports.courseVideo_get_by_id = (req, res, next) => {
                     video: {
                         _id: video._id,
                         title: video.title,
-                        selection: video.selection,
                         hour: video.hour,
                         minute: video.minute,
                         part: video.part,
@@ -151,7 +146,7 @@ exports.courseVideo_delete = (req, res, next) => {
                 request: {
                     type: "POST",
                     url: 'http://localhost:3000/videos',
-                    body: { title: 'String', selection: 'Number', hour: 'Number', minute: 'Number', part: 'Number', videoUrl: 'String', description: 'String', comments: ['Array of Comment IDs'] }
+                    body: { title: 'String', hour: 'Number', minute: 'Number', part: 'Number', videoUrl: 'String', description: 'String', comments: ['Array of Comment IDs'] }
                 }
             });
         })

@@ -5,7 +5,7 @@ const CourseVideo = require('../models/course_video_model');
 // Controller functions for course lessons
 exports.courseLesson_get_all = (req, res, next) => {
     CourseLesson.find()
-        .select('title lesson _id videos')
+        .select('title selection _id videos')
         .exec()
         .then(docs => {
             const response = {
@@ -14,7 +14,7 @@ exports.courseLesson_get_all = (req, res, next) => {
                     return {
                         _id: doc._id,
                         title: doc.title,
-                        lesson: doc.lesson,
+                        selection: doc.selection,
                         videos: doc.videos,
                         request: {
                             type: 'GET',
@@ -38,7 +38,7 @@ exports.courseLesson_create = (req, res, next) => {
         _id: new mongoose.Types.ObjectId(),
         courseId: req.body.courseId,
         title: req.body.title,
-        lesson: req.body.lesson,
+        selection: req.body.selection,
         videos: req.body.videos
     });
     courseLesson
@@ -50,7 +50,7 @@ exports.courseLesson_create = (req, res, next) => {
                 createdLesson: {
                     _id: result._id,
                     title: result.title,
-                    lesson: result.lesson,
+                    selection: result.selection,
                     videos: result.videos,
                     request: {
                         type: 'GET',

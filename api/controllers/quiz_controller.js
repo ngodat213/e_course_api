@@ -12,9 +12,9 @@ exports.quiz_get_all = (req, res, next) => {
                 return {
                     _id: quiz._id,
                     description: quiz.description,
-                    image: quiz.image,
+                    imageUrl: quiz.imageUrl,
                     title: quiz.title,
-                    type: quiz.type,
+                    category: quiz.category,
                     lessons: quiz.lessons,
                     request: {
                         type: 'GET',
@@ -48,9 +48,9 @@ exports.quiz_create = (req, res, next) => {
             createdQuiz: {
                 _id: result._id,
                 description: result.description,
-                image: result.image,
+                imageUrl: result.imageUrl,
                 title: result.title,
-                type: result.type,
+                category: result.category,
                 lessons: result.lessons,
                 request: {
                     type: 'GET',
@@ -131,7 +131,7 @@ exports.quiz_delete = (req, res, next) => {
                 request: {
                     type: "POST",
                     url: 'http://localhost:3000/quiz',
-                    body: { description: 'String', image: 'Number', title: "String", type: "String",  }
+                    body: { description: 'String', imageUrl: 'String', title: "String", category: "String", lesson: "[]" }
                 }
             });
         })
