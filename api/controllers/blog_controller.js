@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
-const Blog = require('../models/blog');
+const Blog = require('../models/blog_model');
+const User = require('../models/user_model');
 
 exports.blog_get_all = (req, res, next) => {
     Blog.find()
+        .select('title description type imageUrl comments category likes dislike mark _id')
+        .populate({
+            path: 'user',
+            select: '_id username photoUrl'
+        })
         .exec()
         .then(blogs => {
             res.status(200).json({
@@ -19,6 +25,7 @@ exports.blog_get_all = (req, res, next) => {
                         likes: blog.likes,
                         dislike: blog.dislike,
                         mark: blog.mark,
+                        user: blog.user,
                         request: {
                             type: 'GET',
                             url: 'http://localhost:3000/blogs/' + blog._id
@@ -46,7 +53,8 @@ exports.blog_create = (req, res, next) => {
         category: req.body.category,
         likes: req.body.likes || 0,
         dislike: req.body.dislike || 0,
-        mark: req.body.mark || 0
+        mark: req.body.mark || 0,
+        user: req.body.user,
     });
 
     blog.save()
@@ -65,6 +73,7 @@ exports.blog_create = (req, res, next) => {
                     likes: result.likes,
                     dislike: result.dislike,
                     mark: result.mark,
+                    user: result.user,
                     request: {
                         type: 'GET',
                         url: 'http://localhost:3000/blogs/' + result._id
@@ -83,6 +92,11 @@ exports.blog_create = (req, res, next) => {
 exports.blog_get_by_id = (req, res, next) => {
     const id = req.params.blogId;
     Blog.findById(id)
+        .select('title description type imageUrl comments category likes dislike mark _id')
+        .populate({
+            path: 'user',
+            select: '_id username photoUrl'
+        })
         .exec()
         .then(blog => {
             if (blog) {
@@ -153,7 +167,8 @@ exports.blog_delete = (req, res, next) => {
                         category: 'String',
                         likes: 'Number',
                         dislike: 'Number',
-                        mark: 'Number'
+                        mark: 'Number',
+                        user: 'Object id'
                     }
                 }
             });

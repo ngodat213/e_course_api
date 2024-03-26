@@ -5,7 +5,11 @@ const CourseVideo = require('../models/course_video_model');
 // Controller functions for course lessons
 exports.courseLesson_get_all = (req, res, next) => {
     CourseLesson.find()
-        .select('title selection _id videos')
+        .select('title selection _id')
+        .populate({
+            path: 'videos',
+            select: '_id title hour minute part videoUrl description comments'
+        })
         .exec()
         .then(docs => {
             const response = {
@@ -70,7 +74,11 @@ exports.courseLesson_create = (req, res, next) => {
 exports.courseLesson_get_by_id = (req, res, next) => {
     const id = req.params.lessonId;
     CourseLesson.findById(id)
-        .select('_id title lesson videos')
+        .select('_id title selection')
+        .populate({
+            path: 'videos',
+            select: '_id title hour minute part videoUrl description comments'
+        })
         .exec()
         .then(doc => {
             console.log("From database", doc);

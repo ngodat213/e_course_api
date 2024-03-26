@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const dbUrl = `mongodb+srv://hydra:${process.env.password}@cluster0.d0dwiwa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const dbUrl = `mongodb+srv://hydra:${process.env.PASSWORD}@cluster0.d0dwiwa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Router -- course
 const courseRoutes = require('./api/routes/course_router');

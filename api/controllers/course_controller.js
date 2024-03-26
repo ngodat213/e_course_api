@@ -4,24 +4,24 @@ const Lesson = require('../models/course_lesson_model');
 
 exports.course_get_all = (req, res, next) => {
     Course.find()
-        .select('title category description rating teacher order courseImage lessons feedbacks')
+        .select('title category teacherId time description rating teacher register courseImage lessons feedbacks')
         .exec()
         .then(docs => {
             const response = {
                 count: docs.length,
                 courses: docs.map(doc => {
                     return {
-                        _id: course._id,
-                        teacherId: course.teacherId,
-                        courseImage: course.courseImage,
-                        title: course.title,
-                        description: course.description,
-                        time: course.time,
-                        category: course.category,
-                        rating: course.rating,
-                        register: course.register,
-                        lessons: course.lessons,
-                        feedbacks: course.feedbacks,
+                        _id: doc._id,
+                        teacherId: doc.teacherId,
+                        courseImage: doc.courseImage,
+                        title: doc.title,
+                        description: doc.description,
+                        time: doc.time,
+                        category: doc.category,
+                        rating: doc.rating,
+                        register: doc.register,
+                        lessons: doc.lessons,
+                        feedbacks: doc.feedbacks,
                         request: {
                             type: 'GET',
                             url: 'http://localhost:3000/course/' + doc._id,
@@ -89,7 +89,7 @@ exports.course_create = (req, res, next) => {
 exports.course_get = (req, res, next) => {
     const id = req.params.courseId;
     Course.findById(id)
-    .select('_id teacherId time register title category description rating teacher order courseImage lessons feedbacks')
+    .select('_id teacherId time register title category description rating teacher courseImage lessons feedbacks')
     .exec()
     .then(doc => {
         console.log("From database", doc);

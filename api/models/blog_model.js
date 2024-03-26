@@ -11,6 +11,7 @@ const blogSchema = mongoose.Schema({
     likes: {type: Number, default: 0},
     dislike: {type: Number, default: 0},
     mark: {type: Number, default: 0},
+    userId: {type: mongoose.Schema.ObjectId, ref: "User",required: true}
 });
 
 module.exports = mongoose.model('Blog', blogSchema);
